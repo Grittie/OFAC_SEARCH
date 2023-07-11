@@ -30,6 +30,7 @@ namespace OFAC_Search
             OpenSource.IsEnabled = false;
             resVal.Text = string.Empty;
 
+            //TODO: change so it doesnt save root dir
             var folders = Directory.GetDirectories(DirSrc.Text, "*", SearchOption.AllDirectories).ToList();
             folders.Insert(0, DirSrc.Text);
             int index = 0;
