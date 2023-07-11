@@ -11,6 +11,8 @@ namespace OFAC_Search
     public partial class WebviewWindow : Window
     {
         string Folder = string.Empty;
+        string csvFilePath = "results.csv";
+
         public WebviewWindow(string folder)
         {
             InitializeComponent();
@@ -52,9 +54,46 @@ namespace OFAC_Search
         private async void CoreWebView2_DOMContentLoaded2(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
             var printSettings = webView.CoreWebView2.Environment.CreatePrintSettings();
+            string pageContent = await webView.CoreWebView2.ExecuteScriptAsync("document.documentElement.outerHTML");
+
+            if (pageContent.Contains("Your search has not returned any results."))
+            {
+                // Log negative result
+                LogResult("negative");
+            }
+            else
+            {
+                // Log positive result
+                LogResult("positive");
+            }
 
             await webView.CoreWebView2.PrintToPdfAsync(Path.Combine(Folder, $"OFAC {DateTime.Now.ToString("yyyy-MM-dd")}.pdf"), printSettings);
             this.Close();
+        }//
+
+        void LogResult(string result)
+        {
+            // Get the directory name
+            string dirName = new DirectoryInfo(Folder).Name;
+
+            // Create a new line of CSV data with the directory name
+            string csvLine = $"{DateTime.Now},{dirName},{result}";
+
+            // Check if the CSV file exists
+            bool csvFileExists = File.Exists(csvFilePath);
+
+            // Open the CSV file in append mode
+            using (StreamWriter sw = new StreamWriter(csvFilePath, true))
+            {
+                // If the file doesn't exist, add a header row
+                if (!csvFileExists)
+                {
+                    sw.WriteLine("Timestamp,Directory,Result");
+                }
+
+                // Write the line of CSV data
+                sw.WriteLine(csvLine);
+            }
         }
     }
 }
