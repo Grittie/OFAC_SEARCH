@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <RootNamespace>OFAC_Search</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>

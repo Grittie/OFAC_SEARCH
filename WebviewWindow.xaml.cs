@@ -32,14 +32,22 @@ namespace OFAC_Search
         private void CoreWebView2_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
             var dirName = new DirectoryInfo(Folder).Name;
-            webView.CoreWebView2.DOMContentLoaded -= CoreWebView2_DOMContentLoaded;
-            webView.CoreWebView2.DOMContentLoaded += CoreWebView2_DOMContentLoaded2;
-            var script = @"var compName = document.getElementById(""ctl00_MainContent_txtLastName"");" +
-                        $"compName.value= '{dirName}';" +
-                        @"var searchBtn = document.getElementById(""ctl00_MainContent_btnSearch"");
-                        searchBtn.click();";
-            webView.CoreWebView2.ExecuteScriptAsync(script);
-        }//
+
+            if (dirName.Length > 1)
+            {
+                webView.CoreWebView2.DOMContentLoaded -= CoreWebView2_DOMContentLoaded;
+                webView.CoreWebView2.DOMContentLoaded += CoreWebView2_DOMContentLoaded2;
+                var script = @"var compName = document.getElementById(""ctl00_MainContent_txtLastName"");" +
+                            $"compName.value= '{dirName}';" +
+                            @"var searchBtn = document.getElementById(""ctl00_MainContent_btnSearch"");
+                    searchBtn.click();";
+                webView.CoreWebView2.ExecuteScriptAsync(script);
+            }
+            else
+            {
+                this.Close();
+            }
+        }
 
         private async void CoreWebView2_DOMContentLoaded2(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
