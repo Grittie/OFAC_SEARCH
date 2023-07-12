@@ -30,16 +30,17 @@ namespace OFAC_Search
             OpenSource.IsEnabled = false;
             resVal.Text = string.Empty;
 
-            var subfolders = Directory.GetDirectories(DirSrc.Text, "*", SearchOption.TopDirectoryOnly).ToList();
+            var folders = Directory.GetDirectories(DirSrc.Text, "*", SearchOption.AllDirectories).ToList();
+            folders.Insert(0, DirSrc.Text);
             int index = 0;
 
-            foreach (var folder in subfolders)
+            foreach (var folder in folders)
             {
-                resVal.Text = $"{++index} / {subfolders.Count}";
+                resVal.Text = $"{++index} / {folders.Count}";
                 var webView = new WebviewWindow(folder);
                 webView.init();
                 webView.ShowDialog();
-            }
+            }//
 
             StartBtn.IsEnabled = true;
             OpenSource.IsEnabled = true;
@@ -53,7 +54,6 @@ namespace OFAC_Search
                 if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                     DirSrc.Text = fbd.SelectedPath;
             }
-        }
+        }//
     }
 }
-
