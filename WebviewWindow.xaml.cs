@@ -28,7 +28,7 @@ namespace OFAC_Search
             webView.Source = new Uri("https://sanctionssearch.ofac.treas.gov");
             webView.CoreWebView2.DOMContentLoaded += CoreWebView2_DOMContentLoaded;
             webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
-        }//
+        }
 
         private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
@@ -53,7 +53,7 @@ namespace OFAC_Search
             {
                 this.Close();
             }
-        }//
+        }
 
         private async void CoreWebView2_DOMContentLoaded2(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
@@ -71,17 +71,21 @@ namespace OFAC_Search
                 LogResult("positive");
             }
 
-            await webView.CoreWebView2.PrintToPdfAsync(Path.Combine(Folder, $"OFAC {DateTime.Now.ToString("yyyy-MM-dd")}.pdf"), printSettings);
+            await webView.CoreWebView2.PrintToPdfAsync(Path.Combine(Folder, $"OFAC {DateTime.Now:yyyy-MM-dd}.pdf"), printSettings);
             this.Close();
-        }//
+        }
 
         void LogResult(string result)
         {
             // Get the directory name
             string dirName = new DirectoryInfo(Folder).Name;
 
-            // Create a new line of CSV data with the directory name
-            string csvLine = $"{DateTime.Now},{dirName},{result}";
+            // Get the relative directory path
+            string relativeDirPath = Path.GetRelativePath(FirstFolder, Folder);
+
+            // Create a new line of CSV data with the directory name and relative path
+            string csvLine = $"{DateTime.Now:yyyy-MM-dd},{DateTime.Now:HH:mm:ss}," +
+                $"\"{relativeDirPath.Replace("\"", "\"\"")}\",\"{dirName.Replace("\"", "\"\"")}\",{result}";
 
             // Check if the CSV file exists
             bool csvFileExists = File.Exists(csvFilePath);
@@ -92,12 +96,12 @@ namespace OFAC_Search
                 // If the file doesn't exist, add a header row
                 if (!csvFileExists)
                 {
-                    sw.WriteLine("Timestamp,Directory,Result");
+                    sw.WriteLine("Date,Time,Directory,Name,Result");
                 }
 
                 // Write the line of CSV data
                 sw.WriteLine(csvLine);
             }
-        }//
+        }
     }
 }
