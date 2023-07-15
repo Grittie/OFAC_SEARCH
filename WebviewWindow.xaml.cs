@@ -12,13 +12,14 @@ namespace OFAC_Search
     {
         string Folder = string.Empty;
         string FirstFolder = string.Empty;
-        string csvFilePath = "results.csv";
+        string csvFilePath = string.Empty;
 
         public WebviewWindow(string folder, string firstFolder)
         {
             InitializeComponent();
             Folder = folder;
             FirstFolder = firstFolder;
+            csvFilePath = firstFolder + "/results.csv";
         }
 
         public async void init()
