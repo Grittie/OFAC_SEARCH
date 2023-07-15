@@ -11,12 +11,14 @@ namespace OFAC_Search
     public partial class WebviewWindow : Window
     {
         string Folder = string.Empty;
+        string FirstFolder = string.Empty;
         string csvFilePath = "results.csv";
 
-        public WebviewWindow(string folder)
+        public WebviewWindow(string folder, string firstFolder)
         {
             InitializeComponent();
             Folder = folder;
+            FirstFolder = firstFolder;
         }
 
         public async void init()
@@ -34,8 +36,9 @@ namespace OFAC_Search
         private void CoreWebView2_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
             var dirName = new DirectoryInfo(Folder).Name;
+            var dirFirst = new DirectoryInfo(FirstFolder).Name;
 
-            if (dirName.Length > 1)
+            if (dirName.Length > 1 && dirName != dirFirst)
             {
                 webView.CoreWebView2.DOMContentLoaded -= CoreWebView2_DOMContentLoaded;
                 webView.CoreWebView2.DOMContentLoaded += CoreWebView2_DOMContentLoaded2;
@@ -49,7 +52,7 @@ namespace OFAC_Search
             {
                 this.Close();
             }
-        }
+        }//
 
         private async void CoreWebView2_DOMContentLoaded2(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
@@ -94,6 +97,6 @@ namespace OFAC_Search
                 // Write the line of CSV data
                 sw.WriteLine(csvLine);
             }
-        }
+        }//
     }
 }

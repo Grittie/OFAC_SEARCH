@@ -12,7 +12,7 @@ namespace OFAC_Search
         public MainWindow()
         {
             InitializeComponent();
-        }
+        }//
 
         private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -26,6 +26,7 @@ namespace OFAC_Search
                 MessageBox.Show("Directory not found");
                 return;
             }
+
             StartBtn.IsEnabled = false;
             OpenSource.IsEnabled = false;
             resVal.Text = string.Empty;
@@ -34,16 +35,32 @@ namespace OFAC_Search
             folders.Insert(0, DirSrc.Text);
             int index = 0;
 
+            string firstFolder = null;
+
             foreach (var folder in folders)
             {
+                if (firstFolder == null)
+                {
+                    firstFolder = folder;
+                }
+
                 resVal.Text = $"{++index} / {folders.Count}";
-                var webView = new WebviewWindow(folder);
+                var webView = new WebviewWindow(folder, firstFolder);
                 webView.init();
                 webView.ShowDialog();
-            }//
+            }
+
+            // Use the firstFolder variable here as needed
 
             StartBtn.IsEnabled = true;
             OpenSource.IsEnabled = true;
+        }//
+
+
+        private void DifferentFunction(string folder)
+        {
+            // Perform operations with the first found folder
+            // Use the 'folder' variable here
         }
 
         private void OpenSource_Click(object sender, RoutedEventArgs e)
